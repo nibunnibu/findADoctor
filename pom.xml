@@ -16,10 +16,9 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<db.url>jdbc:postgresql://localhost:5432/opmanagement</db.url>
-		<!--<db.url>jdbc:postgresql://35.237.136.207:5432/opmanagement</db.url>-->
-		<db.username>dbadevelopment</db.username>
-		<db.password>dba212018nov</db.password>
+		<db.url>jdbc:postgresql://localhost:5432/doctor_assist</db.url>
+		<db.username>nibun</db.username>
+		<db.password>nibun_12345</db.password>
 	</properties>
 
 	<dependencies>
@@ -53,6 +52,17 @@
 			<artifactId>jooq-codegen</artifactId>
 			<version>3.11.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>5.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.7.8</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -60,6 +70,34 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>5.0.0</version>
+
+				<!--&lt;!&ndash; Note that we're executing the Flyway
+				plugin in the "generate-sources" phase &ndash;&gt;-->
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>migrate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<!--&lt;!&ndash; Note that we need to prefix the db/migration
+				path with filesystem: to prevent Flyway
+				from looking for our migration scripts
+				only on the classpath &ndash;&gt;-->
+				<configuration>
+					<url>${db.url}</url>
+					<user>${db.username}</user>
+					<password>${db.password}</password>
+					<locations>
+						<location>filesystem:src/main/resources/db/migration</location>
+					</locations>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.jooq</groupId>
@@ -96,17 +134,7 @@
 						<database>
 							<name>org.jooq.meta.postgres.PostgresDatabase</name>
 							<includes>.*</includes>
-							<!--<inputSchema>otc</inputSchema>-->
 							<inputSchema>public</inputSchema>
-
-							<!--<forcedTypes>
-								<forcedType>
-									<userType>com.google.gson.JsonElement</userType>
-									<binding>com.bestdoc.opmanagement.utils.PostgresJSONGsonBinding</binding>
-									<expression>SCHEDULE|SESSIONS|SLOTS</expression>
-									<types>.*</types>
-								</forcedType>
-							</forcedTypes>-->
 						</database>
 						<target>
 							<packageName>com.self.myapp.db</packageName>
@@ -119,3 +147,4 @@
 	</build>
 
 </project>
+

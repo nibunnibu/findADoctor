@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    jdbc-url: jdbc:postgresql://localhost:5432/doctor_assist
+    username: nibun
+    password: nibun_12345
+    driverClassName: org.postgresql.Driver
+    minimum-idle: 4
+    maximum-pool-size: 10
+    maxLifetime: 10000
+  jooq:
+    sql-dialect: postgres_9_4
+  flyway:
+    locations: classpath:db/migration
+    baselineOnMigrate: true
